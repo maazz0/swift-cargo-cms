@@ -13,14 +13,7 @@ export const metadata: Metadata = {
     default: 'Swift Cargo CMS',
     template: '%s | Swift Cargo CMS',
   },
-  description: 'Modern courier and shipment management system. Track, manage, and deliver with confidence.',
-  keywords: ['cargo', 'logistics', 'shipment', 'tracking', 'courier', 'delivery'],
-  authors: [{ name: 'Swift Cargo' }],
-  openGraph: {
-    title: 'Swift Cargo CMS',
-    description: 'Modern courier and shipment management system',
-    type: 'website',
-  },
+  description: 'Modern courier and shipment management system.',
 }
 
 export default function RootLayout({
@@ -31,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

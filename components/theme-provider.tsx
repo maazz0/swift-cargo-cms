@@ -48,7 +48,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     applyTheme(newTheme)
   }
 
-  // Listen for system changes
   useEffect(() => {
     if (theme !== 'system') return
     const media = window.matchMedia('(prefers-color-scheme: dark)')
