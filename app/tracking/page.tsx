@@ -9,7 +9,6 @@ export default function TrackingPage() {
   const [shipment, setShipment] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
   // ============================================
   // REALTIME FEATURE - ADD THIS useEffect HERE
   // ============================================

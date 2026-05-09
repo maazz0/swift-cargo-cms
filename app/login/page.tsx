@@ -9,15 +9,22 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const [errorMsg, setErrorMsg] = useState('')
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-    
-    if (!error) router.push('/dashboard')
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    setErrorMsg(error.message)
+    return
+  }
+  router.push('/dashboard')
+
   }
 
   return (
