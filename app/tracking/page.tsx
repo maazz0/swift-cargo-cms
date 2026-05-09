@@ -271,7 +271,7 @@ export default function TrackingPage() {
                           <p className="text-blue-100 text-sm mb-1">Tracking Number</p>
                           <p className="text-3xl font-mono font-bold">{shipment.tracking_number}</p>
                         </div>
-                        <StatusBadge status={shipment.status} light />
+                        <StatusBadge status={shipment.status} />
                       </div>
                     </div>
 
