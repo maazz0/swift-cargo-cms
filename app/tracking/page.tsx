@@ -7,7 +7,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { ShipmentTimeline } from '@/components/ui/shipment-timeline'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { supabase } from '@/lib/supabase'
-import { formatDateTime, formatCurrency, getStatusIconColor } from '@/lib/utils'
+import { formatDateTime, formatCurrency } from '@/lib/utils'
 import type { Shipment } from '@/types'
 import {
   Search,
@@ -120,7 +120,6 @@ export default function TrackingPage() {
 
       setShipment(data)
 
-      // Save to history
       const newHistory = [trackingNumber.trim(), ...searchHistory.filter((h) => h !== trackingNumber.trim())].slice(0, 5)
       setSearchHistory(newHistory)
       localStorage.setItem('tracking-history', JSON.stringify(newHistory))
@@ -190,7 +189,6 @@ export default function TrackingPage() {
         <Navbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} isSidebarOpen={sidebarOpen} />
 
         <main className="p-6 sm:p-8 max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Track Shipment</h1>
             <p className="text-slate-500 dark:text-slate-400 mt-1">
@@ -198,7 +196,6 @@ export default function TrackingPage() {
             </p>
           </div>
 
-          {/* Search */}
           <div className="max-w-2xl mb-8">
             <form onSubmit={handleSearch} className="relative">
               <div className="flex gap-3">
@@ -240,7 +237,6 @@ export default function TrackingPage() {
             )}
           </div>
 
-          {/* Error */}
           {error && (
             <div className="mb-8 rounded-xl bg-red-50 border border-red-200 p-4 flex items-center gap-3 text-red-700 dark:bg-red-950/30 dark:border-red-800 dark:text-red-300">
               <AlertCircle className="w-5 h-5 shrink-0" />
@@ -248,22 +244,18 @@ export default function TrackingPage() {
             </div>
           )}
 
-          {/* Results */}
           {shipment && (
             <div className="space-y-6 animate-fade-in">
-              {/* Live Indicator */}
               <div className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 </span>
-                Live tracking active — updates in real-time
+                Live tracking active
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Info */}
                 <div className="lg:col-span-2 space-y-6">
-                  {/* Status Card */}
                   <div className="rounded-2xl bg-white border shadow-sm dark:bg-slate-900 dark:border-slate-800 overflow-hidden">
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
                       <div className="flex items-center justify-between">
@@ -285,7 +277,7 @@ export default function TrackingPage() {
                       <InfoItem
                         icon={Calendar}
                         label="Shipped"
-                        value={formatDate(shipment.shipment_date)}
+                        value={formatDateTime(shipment.shipment_date).split(',')[0]}
                       />
                       <InfoItem
                         icon={Package}
@@ -295,7 +287,6 @@ export default function TrackingPage() {
                     </div>
                   </div>
 
-                  {/* Timeline */}
                   <div className="rounded-2xl bg-white border shadow-sm p-6 dark:bg-slate-900 dark:border-slate-800">
                     <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-6">
                       Shipment Progress
@@ -304,9 +295,7 @@ export default function TrackingPage() {
                   </div>
                 </div>
 
-                {/* Sidebar Info */}
                 <div className="space-y-6">
-                  {/* Sender */}
                   <InfoCard
                     title="Sender Information"
                     icon={User}
@@ -318,7 +307,6 @@ export default function TrackingPage() {
                     ]}
                   />
 
-                  {/* Recipient */}
                   <InfoCard
                     title="Recipient Information"
                     icon={MapPin}
@@ -339,7 +327,6 @@ export default function TrackingPage() {
                     ]}
                   />
 
-                  {/* Route Info */}
                   {shipment.shipment_routes && shipment.shipment_routes.length > 0 && (
                     <div className="rounded-2xl bg-white border shadow-sm p-6 dark:bg-slate-900 dark:border-slate-800">
                       <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4 uppercase tracking-wider">
@@ -357,7 +344,7 @@ export default function TrackingPage() {
                                 {route.routes?.route_name || 'Route'}
                               </p>
                               <p className="text-xs text-slate-500 dark:text-slate-400">
-                                {route.status} • {formatDate(route.assigned_date)}
+                                {route.status} {route.assigned_date ? `• ${formatDateTime(route.assigned_date).split(',')[0]}` : ''}
                               </p>
                             </div>
                             <ChevronRight className="w-4 h-4 text-slate-400" />
