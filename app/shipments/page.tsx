@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
@@ -25,6 +26,7 @@ import {
   ChevronLeft,
   ChevronRight,
   SlidersHorizontal,
+  
 } from 'lucide-react'
 
 type SortField = 'tracking_number' | 'status' | 'shipment_date' | 'weight'
@@ -161,10 +163,14 @@ export default function ShipmentsPage() {
                 Manage and track all your shipments
               </p>
             </div>
-            <button className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-all shadow-sm hover:shadow-md">
-              <Plus className="w-4 h-4" />
-              New Shipment
-            </button>
+              
+              <Link
+                href="/shipments/new"
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-all shadow-sm hover:shadow-md"
+              >
+                <Plus className="w-4 h-4" />
+                New Shipment
+              </Link>
           </div>
 
           {/* Error */}
