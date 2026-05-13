@@ -3,11 +3,14 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/auth-provider'
 import { Package, Eye, EyeOff, ArrowRight, Mail, Lock } from 'lucide-react'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { login } = useAuth()
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -20,11 +23,13 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    // Simulate login - replace with actual Supabase auth
-    setTimeout(() => {
+    // Simple validation (replace with Supabase Auth later)
+    if (email === 'admin@swiftcargo.com' && password === 'admin123') {
+      login()
+    } else {
+      setError('Invalid email or password')
       setLoading(false)
-      router.push('/dashboard')
-    }, 1500)
+    }
   }
 
   return (
@@ -33,8 +38,6 @@ export default function LoginPage() {
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-slate-900 to-purple-900/90" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-
-        {/* Animated background shapes */}
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
 
@@ -55,7 +58,6 @@ export default function LoginPage() {
             <p className="text-lg text-slate-300 max-w-md">
               Track shipments, manage couriers, and optimize deliveries — all in one powerful platform.
             </p>
-
             <div className="flex gap-8 pt-4">
               <div>
                 <p className="text-3xl font-bold">2M+</p>
@@ -71,7 +73,6 @@ export default function LoginPage() {
               </div>
             </div>
           </div>
-
           <p className="text-sm text-slate-500">© 2026 Swift Cargo CMS</p>
         </div>
       </div>

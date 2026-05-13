@@ -10,6 +10,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { supabase } from '@/lib/supabase'
 import { formatDate, formatCurrency } from '@/lib/utils'
 import type { Shipment, ShipmentStatus } from '@/types'
+import { useAuth } from '@/components/auth-provider'
 import {
   Package,
   Search,
@@ -33,7 +34,26 @@ type SortField = 'tracking_number' | 'status' | 'shipment_date' | 'weight'
 type SortOrder = 'asc' | 'desc'
 
 export default function ShipmentsPage() {
+
+  const { isAuthenticated } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login')
+    }
+  }, [isAuthenticated, router])
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
+        <p className="text-slate-500">Redirecting to login...</p>
+      </div>
+    )
+  }
+
+  // ... rest of shipments code
+  
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Data states

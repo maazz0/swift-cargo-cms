@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@/components/auth-provider'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -48,7 +49,25 @@ interface Courier {
 }
 
 export default function NewShipmentPage() {
+
+  const { isAuthenticated } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login')
+    }
+  }, [isAuthenticated, router])
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
+        <p className="text-slate-500">Redirecting to login...</p>
+      </div>
+    )
+  }
+
+  // ... rest of new shipment form code 
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Dropdown data

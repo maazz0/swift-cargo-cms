@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@/components/auth-provider'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
@@ -24,7 +25,27 @@ import {
 } from 'lucide-react'
 
 export default function DashboardPage() {
+
+  const { isAuthenticated } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login')
+    }
+  }, [isAuthenticated, router])
+
+  // Show loading or null while checking auth
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
+        <p className="text-slate-500">Redirecting to login...</p>
+      </div>
+    )
+  }
+
+  // ... rest of your dashboard code
+  
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [stats, setStats] = useState<DashboardStats>({
     totalShipments: 0,
