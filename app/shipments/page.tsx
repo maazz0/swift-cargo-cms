@@ -427,18 +427,49 @@ export default function ShipmentsPage() {
                             >
                               <Eye className="w-4 h-4" />
                             </button>
-                            <button
-                              className="rounded-lg p-2 text-slate-400 hover:bg-amber-50 hover:text-amber-600 transition-colors dark:hover:bg-amber-950/30"
-                              title="Edit"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </button>
-                            <button
-                              className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors dark:hover:bg-red-950/30"
-                              title="Delete"
-                            >
+                                <Link
+                                href="/shipments/new"
+                                className="rounded-lg p-2 text-slate-400 hover:bg-amber-50 hover:text-amber-600 transition-colors dark:hover:bg-amber-950/30"
+                                title="Edit"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </Link>
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`Are you sure you want to delete shipment ${shipment.tracking_number}?`)) return
+                                  
+                                  try {
+                                    // Delete related records first (due to FK constraints)
+                                    await supabase.from('payments').delete().eq('shipment_id', shipment.shipment_id)
+                                    await supabase.from('deliveries').delete().eq('shipment_id', shipment.shipment_id)
+                                    await supabase.from('shipment_routes').delete().eq('shipment_id', shipment.shipment_id)
+                                    
+                                    // Delete the shipment
+                                    const { error } = await supabase.from('shipments').delete().eq('shipment_id', shipment.shipment_id)
+                                    
+                                    if (error) throw error
+                                    
+                                    // Remove from local state - use the correct state setter from YOUR shipments page
+                                    setShipments(prev => prev.filter(s => s.shipment_id !== shipment.shipment_id))
+                                    setTotalCount(prev => prev - 1)
+                                    
+                                    // Clear selection if this was selected
+                                    setSelectedShipments(prev => {
+                                      const newSet = new Set(prev)
+                                      newSet.delete(shipment.shipment_id)
+                                      return newSet
+                                    })
+                                    
+                                    alert('Shipment deleted successfully')
+                                  } catch (err: any) {
+                                    alert('Failed to delete: ' + err.message)
+                                  }
+                                }}
+                                className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors dark:hover:bg-red-950/30"
+                                title="Delete"
+                              >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                              </button>
                           </div>
                         </td>
                       </tr>
